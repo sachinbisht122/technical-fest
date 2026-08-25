@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NIRVAN '26 · WEB-A-THON 4.0 | Tech Geeks — GEHU Haldwani</title>
+  <meta name="description" content="WEB-A-THON 4.0 — Web Design & Development competition under NIRVAN '26 Technical Fest, organised by Tech Geeks Club, Graphic Era Hill University, Haldwani Campus." />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- ====== CSS (separate) ====== -->
+  <style>
+    /* ----- reset & variables ----- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #05060f; --bg2: #0b0e1e; --card: rgba(255,255,255,.045);
+      --line: rgba(255,255,255,.10);
+      --c1: #00e5ff; --c2: #7c4dff; --c3: #ff2d95; --c4: #5cff9d;
+      --txt: #eef1ff; --mut: #9aa3c7;
+      --grad: linear-gradient(100deg, var(--c1), var(--c2) 55%, var(--c3));
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--txt); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; line-height: 1.65; }
+    h1,h2,h3,.logo { font-family: 'Syne', sans-serif; line-height: 1.1; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .wrap { width: min(1180px, 92%); margin: auto; }
+    .grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* ----- background fx ----- */
+    #stars { position: fixed; inset: 0; z-index: -2; }
+    .glow { position: fixed; border-radius: 50%; filter: blur(120px); opacity: .35; z-index: -1; pointer-events: none; }
+    .g1 { width: 520px; height: 520px; background: var(--c2); top: -160px; left: -140px; }
+    .g2 { width: 460px; height: 460px; background: var(--c1); top: 40%; right: -180px; opacity: .22; }
+    .g3 { width: 420px; height: 420px; background: var(--c3); bottom: -160px; left: 30%; opacity: .18; }
+    .grid-bg {
+      position: fixed; inset: 0; z-index: -2; opacity: .35;
+      background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(circle at 50% 20%, #000 10%, transparent 78%);
+    }
+
+    /* ----- nav ----- */
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 99; transition: .35s; padding: 16px 0; }
+    header.on { background: rgba(5,6,15,.82); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); padding: 9px 0; }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .logo { display: flex; align-items: center; gap: 11px; font-size: 1.16rem; letter-spacing: .5px; }
+    .logo-img { height: 44px; width: auto; }
+    .logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .logo-text small { font-family: 'JetBrains Mono'; font-size: .6rem; color: var(--mut); letter-spacing: 2.4px; font-weight: 400; }
+    nav ul { display: flex; gap: 26px; list-style: none; font-size: .92rem; }
+    nav a { color: var(--mut); transition: .25s; position: relative; }
+    nav a:hover { color: #fff; }
+    nav a::after { content: ''; position: absolute; left: 0; bottom: -6px; width: 0; height: 2px; background: var(--grad); transition: .3s; }
+    nav a:hover::after { width: 100%; }
+    .btn { display: inline-block; padding: 13px 28px; border-radius: 40px; font-weight: 700; font-size: .92rem; border: 0; cursor: pointer; transition: .3s; font-family: inherit; }
+    .btn-p { background: var(--grad); color: #04050e; box-shadow: 0 8px 30px rgba(124,77,255,.4); }
+    .btn-p:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,229,255,.45); }
+    .btn-o { border: 1px solid var(--line); color: #fff; background: rgba(255,255,255,.04); }
+    .btn-o:hover { border-color: var(--c1); color: var(--c1); }
+    .burger { display: none; flex-direction: column; gap: 5px; background: none; border: 0; cursor: pointer; padding: 8px; }
+    .burger span { width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: .3s; }
+
+    /* ----- hero ----- */
+    .hero { min-height: 100vh; display: flex; align-items: center; padding: 120px 0 70px; position: relative; }
+    .hero-badge { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 16px; }
+    .hero-badge img { height: 48px; width: auto; }
+    .pill { display: inline-flex; align-items: center; gap: 9px; padding: 8px 18px; border: 1px solid var(--line); border-radius: 40px; font-size: .74rem; letter-spacing: 2.6px; color: var(--c1); background: rgba(0,229,255,.07); font-family: 'JetBrains Mono'; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--c4); box-shadow: 0 0 12px var(--c4); animation: blink 1.4s infinite; }
+    @keyframes blink { 50% { opacity: .25; } }
+    .hero h1 { font-size: clamp(2.9rem, 9vw, 6.6rem); letter-spacing: -2px; margin: 22px 0 6px; }
+    .hero h1 span { display: block; }
+    .ver { font-family: 'JetBrains Mono'; font-size: clamp(.8rem, 2.4vw, 1.05rem); letter-spacing: 8px; color: var(--mut); margin-bottom: 20px; }
+    .hero p.lead { max-width: 600px; color: var(--mut); font-size: 1.04rem; }
+    .cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 34px; }
+    .meta { display: flex; gap: 34px; flex-wrap: wrap; margin-top: 46px; padding-top: 26px; border-top: 1px solid var(--line); }
+    .meta b { display: block; font-size: 1.28rem; font-family: 'Syne'; }
+    .meta small { color: var(--mut); font-size: .72rem; letter-spacing: 2px; font-family: 'JetBrains Mono'; }
+    .count { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 38px; }
+    .cbox { min-width: 88px; padding: 16px 10px; text-align: center; border: 1px solid var(--line); border-radius: 16px; background: var(--card); backdrop-filter: blur(8px); }
+    .cbox b { font-size: 1.9rem; font-family: 'JetBrains Mono'; display: block; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .cbox small { font-size: .6rem; letter-spacing: 2px; color: var(--mut); font-family: 'JetBrains Mono'; }
+
+    /* ----- sections ----- */
+    section { padding: 100px 0; position: relative; }
+    .head { max-width: 660px; margin-bottom: 52px; }
+    .tag { font-family: 'JetBrains Mono'; font-size: .72rem; letter-spacing: 3.4px; color: var(--c3); }
+    .head h2 { font-size: clamp(2rem, 5vw, 3.2rem); margin: 12px 0 14px; letter-spacing: -1px; }
+    .head p { color: var(--mut); }
+    .cards { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(265px, 1fr)); }
+    .card { padding: 30px; border: 1px solid var(--line); border-radius: 22px; background: var(--card); backdrop-filter: blur(8px); transition: .35s; position: relative; overflow: hidden; }
+    .card:hover { transform: translateY(-8px); border-color: rgba(0,229,255,.45); box-shadow: 0 22px 55px rgba(0,0,0,.5); }
+    .card::before { content: ''; position: absolute; inset: 0; background: var(--grad); opacity: 0; transition: .35s; }
+    .card:hover::before { opacity: .055; }
+    .ico { width: 52px; height: 52px; border-radius: 15px; display: grid; place-items: center; font-size: 1.4rem; background: rgba(255,255,255,.06); border: 1px solid var(--line); margin-bottom: 18px; }
+    .card h3 { font-size: 1.16rem; margin-bottom: 9px; }
+    .card p { color: var(--mut); font-size: .93rem; }
+
+    /* about split */
+    .split { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+    .shot { border-radius: 24px; overflow: hidden; border: 1px solid var(--line); height: 400px; position: relative; }
+    .shot::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(5,6,15,.85)); }
+    .shot .cap { position: absolute; bottom: 20px; left: 22px; z-index: 2; font-family: 'JetBrains Mono'; font-size: .76rem; color: var(--c1); letter-spacing: 1.6px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+    .chip { padding: 8px 16px; border: 1px solid var(--line); border-radius: 30px; font-size: .79rem; color: var(--mut); font-family: 'JetBrains Mono'; cursor: default; }
+    .chip:hover { color: var(--c4); border-color: var(--c4); }
+
+    /* gallery */
+    .gal { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+    .gal div { height: 210px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); position: relative; }
+    .gal div:nth-child(1), .gal div:nth-child(6) { grid-column: span 2; }
+    .gal img { transition: .6s; object-fit: cover; }
+    .gal div:hover img { transform: scale(1.09); }
+
+    /* timeline */
+    .tl { position: relative; padding-left: 34px; }
+    .tl::before { content: ''; position: absolute; left: 8px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--c1), var(--c2), var(--c3)); }
+    .ev { position: relative; padding: 0 0 34px 14px; }
+    .ev::before { content: ''; position: absolute; left: -33px; top: 6px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg); border: 3px solid var(--c1); box-shadow: 0 0 16px var(--c1); }
+    .ev span { font-family: 'JetBrains Mono'; font-size: .74rem; color: var(--c4); letter-spacing: 1.6px; }
+    .ev h4 { font-family: 'Syne'; font-size: 1.12rem; margin: 5px 0 5px; }
+    .ev p { color: var(--mut); font-size: .92rem; }
+
+    /* prizes */
+    .prizes { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 22px; align-items: end; }
+    .pz { text-align: center; padding: 38px 24px; border: 1px solid var(--line); border-radius: 24px; background: var(--card); }
+    .pz.win { border-color: rgba(255,214,0,.55); background: linear-gradient(180deg, rgba(255,214,0,.12), rgba(255,255,255,.03)); transform: scale(1.05); }
+    .pz .em { font-size: 2.4rem; }
+    .pz b { display: block; font-family: 'Syne'; font-size: 1.85rem; margin: 10px 0 4px; }
+    .pz small { color: var(--mut); font-family: 'JetBrains Mono'; font-size: .72rem; letter-spacing: 2px; }
+
+    /* form */
+    .formbox { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; padding: 44px; border: 1px solid var(--line); border-radius: 28px; background: var(--card); backdrop-filter: blur(10px); }
+    .field { margin-bottom: 16px; }
+    label { display: block; font-size: .75rem; letter-spacing: 1.6px; color: var(--mut); margin-bottom: 7px; font-family: 'JetBrains Mono'; }
+    input, select, textarea { width: 100%; padding: 13px 16px; border-radius: 12px; background: rgba(255,255,255,.05); border: 1px solid var(--line); color: #fff; font-family: inherit; font-size: .94rem; outline: none; transition: .25s; }
+    input:focus, select:focus, textarea:focus { border-color: var(--c1); background: rgba(0,229,255,.07); }
+    select option { background: #0b0e1e; }
+    .msg { margin-top: 14px; font-size: .88rem; color: var(--c4); display: none; }
+    .rules { list-style: none; }
+    .rules li { padding: 11px 0 11px 30px; border-bottom: 1px dashed var(--line); color: var(--mut); font-size: .92rem; position: relative; }
+    .rules li::before { content: '▹'; position: absolute; left: 4px; color: var(--c1); }
+
+    /* faq */
+    .faq { border: 1px solid var(--line); border-radius: 16px; margin-bottom: 12px; overflow: hidden; background: var(--card); }
+    .faq button { width: 100%; text-align: left; padding: 19px 24px; background: none; border: 0; color: #fff; font-family: 'Syne'; font-size: 1.02rem; cursor: pointer; display: flex; justify-content: space-between; gap: 14px; }
+    .faq .ans { max-height: 0; overflow: hidden; transition: .4s; color: var(--mut); font-size: .93rem; padding: 0 24px; }
+    .faq.open .ans { max-height: 230px; padding: 0 24px 20px; }
+    .faq.open button i { transform: rotate(45deg); }
+    .faq button i { font-style: normal; color: var(--c1); transition: .3s; }
+
+    footer { padding: 60px 0 34px; border-top: 1px solid var(--line); background: rgba(0,0,0,.35); }
+    .fgrid { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 40px; margin-bottom: 38px; }
+    footer p, footer a { color: var(--mut); font-size: .9rem; }
+    footer a:hover { color: var(--c1); }
+    footer h5 { font-family: 'Syne'; font-size: 1rem; margin-bottom: 14px; color: #fff; }
+    .fl { display: grid; gap: 9px; }
+    .copy { text-align: center; padding-top: 24px; border-top: 1px solid var(--line); color: var(--mut); font-size: .8rem; font-family: 'JetBrains Mono'; }
+    .rev { opacity: 0; transform: translateY(34px); transition: .8s cubic-bezier(.2,.7,.3,1); }
+    .rev.in { opacity: 1; transform: none; }
+    .marq { overflow: hidden; border-block: 1px solid var(--line); padding: 14px 0; background: rgba(255,255,255,.03); }
+    .marq div { display: flex; gap: 44px; white-space: nowrap; animation: slide 22s linear infinite; font-family: 'Syne'; font-size: 1.05rem; color: var(--mut); }
+    @keyframes slide { to { transform: translateX(-50%); } }
+
+    /* ----- responsive ----- */
+    @media (max-width: 900px) {
+      .split, .formbox { grid-template-columns: 1fr; gap: 32px; }
+      .gal { grid-template-columns: repeat(2,1fr); }
+      .fgrid { grid-template-columns: 1fr 1fr; }
+      nav { position: fixed; inset: 64px 4% auto; background: rgba(9,11,26,.97); border: 1px solid var(--line); border-radius: 20px; padding: 22px; display: none; backdrop-filter: blur(16px); }
+      nav.show { display: block; }
+      nav ul { flex-direction: column; gap: 16px; }
+      .burger { display: flex; }
+      .pz.win { transform: none; }
+      .formbox { padding: 26px; }
+      .hero-badge img { height: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="stars"></canvas><div class="grid-bg"></div>
+  <div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+
+  <!-- ====== HEADER ====== -->
+  <header id="hd"><div class="wrap nav">
+    <a href="#" class="logo">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 340 60'%3E%3Crect width='340' height='60' fill='%2305060f' rx='10'/%3E%3Ctext x='14' y='22' font-family='Syne, sans-serif' font-weight='800' font-size='14' fill='%2300e5ff'%3EGRAPHIC ERA%3C/text%3E%3Ctext x='14' y='38' font-family='Syne, sans-serif' font-weight='500' font-size='10' fill='%23ffffff'%3EHILL UNIV · HALDWANI%3C/text%3E%3Ctext x='14' y='52' font-family='Syne, sans-serif' font-weight='600' font-size='10' fill='%23ffd700'%3EHACKATHON · NIRVAN '26%3C/text%3E%3Ctext x='185' y='24' font-family='Syne, sans-serif' font-weight='800' font-size='20' fill='%237c4dff'%3ETECH%3C/text%3E%3Ctext x='185' y='44' font-family='Syne, sans-serif' font-weight='700' font-size='16' fill='%23ff2d95'%3EGEEKS%3C/text%3E%3C/svg%3E" 
+           alt="GEHU TechGeeks Hackathon Logo" class="logo-img" style="height:60px; width:auto;"  />
+      <span class="logo-text">NIRVAN '26<small>WEB-A-THON 4.0</small></span>
+    </a>
+    
+    <nav id="nv"><ul>
+      <li><a href="#about">About</a></li><li><a href="#tracks">Tracks</a></li>
+      <li><a href="#schedule">Schedule</a></li><li><a href="#prizes">Prizes</a></li>
+      <li><a href="#gallery">Gallery</a></li><li><a href="#faq">FAQ</a></li>
+    </ul></nav>
+    <div style="display:flex;gap:10px;align-items:center">
+      <a href="#register" class="btn btn-p">Register</a>
+      <button class="burger" id="bg" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div></header>
+
+  <!-- ====== HERO ====== -->
+  <section class="hero"><div class="wrap">
+    <div class="hero-badge">
+      
+      <span class="pill"><span class="dot"></span>NIRVAN '26 · TECHNICAL FEST</span>
+    </div>
+    <h1><span>WEB-A-THON</span><span class="grad">4.0</span></h1>
+    <p class="ver">DESIGN • DEVELOP • DEPLOY</p>
+    <p class="lead">The flagship Web Design &amp; Development challenge of NIRVAN '26, presented by the <b>Tech Geeks Club</b>, School of Engineering &amp; Computer Applications — <b>Graphic Era Hill University, Haldwani Campus</b>. Build a live, responsive product in 24 hours and let your UI/UX creativity speak.</p>
+    <div class="cta">
+      <a href="#register" class="btn btn-p">Register Your Team →</a>
+      <a href="#about" class="btn btn-o">Explore Event</a>
+    </div>
+    <div class="count" id="cd">
+      <div class="cbox"><b id="d">00</b><small>DAYS</small></div>
+      <div class="cbox"><b id="h">00</b><small>HOURS</small></div>
+      <div class="cbox"><b id="m">00</b><small>MINUTES</small></div>
+      <div class="cbox"><b id="s">00</b><small>SECONDS</small></div>
+    </div>
+    <div class="meta">
+      <div><b>24 Hours</b><small>NON-STOP BUILD</small></div>
+      <div><b>2–4</b><small>TEAM SIZE</small></div>
+      <div><b>₹25,000+</b><small>PRIZE POOL</small></div>
+      <div><b>Offline</b><small>GEHU HALDWANI</small></div>
+    </div>
+  </div></section>
+
+  <div class="marq"><div>
+    <span>◆ HTML</span><span>◆ CSS</span><span>◆ JAVASCRIPT</span><span>◆ REACT</span><span>◆ UI / UX</span><span>◆ FIGMA</span><span>◆ TAILWIND</span><span>◆ NODE.JS</span><span>◆ GIT</span><span>◆ DEPLOY</span>
+    <span>◆ HTML</span><span>◆ CSS</span><span>◆ JAVASCRIPT</span><span>◆ REACT</span><span>◆ UI / UX</span><span>◆ FIGMA</span><span>◆ TAILWIND</span><span>◆ NODE.JS</span><span>◆ GIT</span><span>◆ DEPLOY</span>
+  </div></div>
+
+  <!-- ====== ABOUT ====== -->
+  <section id="about"><div class="wrap split rev">
+    <div>
+      <p class="tag">/ ABOUT THE EVENT</p>
+      <h2>Where <span class="grad">code</span> meets creativity.</h2>
+      <p style="color:var(--mut)">WEB-A-THON has grown into the most awaited technical showdown of NIRVAN. In its 4th edition, participants get a live problem statement, a fixed clock, and complete creative freedom — from wireframe to working deployment.</p>
+      <p style="color:var(--mut);margin-top:14px">Whether you are a first-year student writing your first media query or a final-year full-stack developer, WEB-A-THON 4.0 is built to push your limits, sharpen your teamwork, and put your work in front of expert judges from academia and industry.</p>
+      <div class="chips">
+        <span class="chip">Open to all branches</span><span class="chip">Beginner friendly</span>
+        <span class="chip">Mentor support</span><span class="chip">Certificates for all</span>
+        <span class="chip">Live judging</span>
+      </div>
+    </div>
+    <div class="shot"><img src="pic7.jpeg" alt="Students coding at Web-a-thon"><span class="cap">// TECH GEEKS CLUB · GEHU HALDWANI</span></div>
+  </div></section>
+
+  <!-- ====== TRACKS ====== -->
+  <section id="tracks"><div class="wrap rev">
+    <div class="head"><p class="tag">/ PROBLEM TRACKS</p>
+      <h2>Pick your <span class="grad">battlefield</span></h2>
+      <p>Choose one track at the time of registration. The exact problem statement inside your track is revealed at the opening ceremony.</p></div>
+    <div class="cards">
+      <div class="card"><div class="ico">🎨</div><h3>UI / UX Design</h3><p>Craft high-fidelity, accessible interfaces in Figma or code. Judged on visual hierarchy, usability and originality.</p></div>
+      <div class="card"><div class="ico">🌐</div><h3>Frontend Development</h3><p>Pure HTML, CSS and JavaScript or a framework of your choice. Responsiveness and performance carry weight.</p></div>
+      <div class="card"><div class="ico">⚙️</div><h3>Full-Stack Web App</h3><p>Ship a working product with authentication, database and a deployed link. Bonus points for clean architecture.</p></div>
+      <div class="card"><div class="ico">🤖</div><h3>AI-Powered Web</h3><p>Integrate an API or model into a meaningful web experience that solves a real campus or community problem.</p></div>
+      <div class="card"><div class="ico">🏔️</div><h3>Web for Uttarakhand</h3><p>Build for local impact — tourism, agriculture, disaster alerts, hill education or Himalayan heritage.</p></div>
+      <div class="card"><div class="ico">🚀</div><h3>Open Innovation</h3><p>Got an idea that fits nowhere else? Pitch it. Surprise the judges with something nobody expected.</p></div>
+    </div>
+  </div></section>
+
+  <!-- ====== SCHEDULE ====== -->
+  <section id="schedule"><div class="wrap split rev" style="align-items:start">
+    <div>
+      <div class="head"><p class="tag">/ SCHEDULE</p><h2>Event <span class="grad">timeline</span></h2>
+        <p>Two days of ideation, building and pitching at the Haldwani Campus auditorium and computer labs.</p></div>
+      <div class="tl">
+        <div class="ev"><span>DAY 01 · 09:00 AM</span><h4>Registration &amp; Check-in</h4><p>Team verification, ID cards and lab allotment.</p></div>
+        <div class="ev"><span>DAY 01 · 10:30 AM</span><h4>Inauguration &amp; Problem Reveal</h4><p>Address by the faculty coordinators and release of track-wise problem statements.</p></div>
+        <div class="ev"><span>DAY 01 · 11:00 AM</span><h4>Coding Begins ⏱️</h4><p>The 24-hour clock starts. Mentors rotate through the labs.</p></div>
+        <div class="ev"><span>DAY 01 · 06:00 PM</span><h4>Mentor Review — Round 1</h4><p>Progress checkpoint and feedback on design direction.</p></div>
+        <div class="ev"><span>DAY 02 · 11:00 AM</span><h4>Code Freeze &amp; Submission</h4><p>Push to GitHub and submit your deployed link.</p></div>
+        <div class="ev"><span>DAY 02 · 12:30 PM</span><h4>Final Pitch to Judges</h4><p>6-minute demo + 3-minute Q&amp;A per team.</p></div>
+        <div class="ev"><span>DAY 02 · 04:00 PM</span><h4>Valedictory &amp; Prize Distribution</h4><p>Winners announced, certificates for every participant.</p></div>
+      </div>
+    </div>
+    <div>
+      <div class="shot" style="height:330px"><img src="hiee.jpeg" alt="Fest stage"><span class="cap">// NIRVAN FEST · MAIN AUDITORIUM</span></div>
+      <div class="card" style="margin-top:22px">
+        <h3>📍 Venue</h3>
+        <p>Graphic Era Hill University, Haldwani Campus<br>Tularampur, Bareilly Road, Beriparao,<br>Haldwani – 263139, Nainital, Uttarakhand</p>
+        <p style="margin-top:12px" class="mono">Labs: SOE&amp;CA Block · Computer Lab 1–4</p>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- ====== PRIZES ====== -->
+  <section id="prizes"><div class="wrap rev">
+    <div class="head"><p class="tag">/ REWARDS</p><h2>Prizes &amp; <span class="grad">recognition</span></h2>
+      <p>Cash prizes, trophies, internship referrals and certificates issued by the Tech Geeks Club and SOE&amp;CA.</p></div>
+    <div class="prizes">
+      <div class="pz"><div class="em">🥈</div><b>₹6,000</b><small>1ST RUNNER-UP</small></div>
+      <div class="pz win"><div class="em">🏆</div><b>₹12,000</b><small>WINNER</small></div>
+      <div class="pz"><div class="em">🥉</div><b>₹4,000</b><small>2ND RUNNER-UP</small></div>
+      <div class="pz"><div class="em">✨</div><b>₹3,000</b><small>BEST UI / DESIGN</small></div>
+    </div>
+    <div class="cards" style="margin-top:24px">
+      <div class="card"><div class="ico">📜</div><h3>E-Certificates</h3><p>Every participant who submits a project receives an official participation certificate.</p></div>
+      <div class="card"><div class="ico">🧑‍🏫</div><h3>Mentorship</h3><p>Direct feedback from faculty and senior developers of the club throughout the event.</p></div>
+      <div class="card"><div class="ico">🌟</div><h3>Club Induction</h3><p>Top performers get fast-tracked into the Tech Geeks core technical team.</p></div>
+    </div>
+  </div></section>
+
+  <!-- ====== GALLERY ====== -->
+  <section id="gallery"><div class="wrap rev">
+    <div class="head"><p class="tag">/ GALLERY</p><h2>Glimpses of <span class="grad">NIRVAN</span></h2>
+      <p>Moments from past editions of the fest — hackathons, logo quests, seminars and late-night debugging.</p></div>
+    <div class="gal">
+      <div><img src="/pic.jpeg" alt="Hackathon"></div>
+      <div><img src="/pic5.jpeg" alt="Team"></div>
+      <div><img src="pic2.jpeg" alt="Laptop"></div>
+      <div><img src="pic3.jpeg" alt="Design"></div>
+      <div><img src="pic4.jpeg" alt="Award"></div>
+      <div><img src="pic2.jpeg" alt="Crowd"></div>
+    </div>
+  </div></section>
+
+  <!-- ====== REGISTER ====== -->
+  <section id="register"><div class="wrap rev">
+    <div class="head"><p class="tag">/ REGISTRATION</p><h2>Lock in your <span class="grad">team slot</span></h2>
+      <p>Registration is free for GEHU students. Slots are limited and allotted on a first-come basis.</p></div>
+    <div class="formbox">
+      <form id="rf">
+        <div class="field"><label>TEAM NAME</label><input required placeholder="e.g. Null Pointers"></div>
+        <div class="field"><label>TEAM LEADER NAME</label><input required placeholder="Full name"></div>
+        <div class="field"><label>COLLEGE EMAIL</label><input type="email" required placeholder="you@gehu.ac.in"></div>
+        <div class="field"><label>PHONE</label><input type="tel" required pattern="[0-9]{10}" placeholder="10-digit number"></div>
+        <div class="field"><label>BRANCH &amp; YEAR</label><input required placeholder="B.Tech CSE · 2nd Year"></div>
+        <div class="field"><label>TEAM SIZE</label><select><option>2 Members</option><option>3 Members</option><option>4 Members</option></select></div>
+        <div class="field"><label>PREFERRED TRACK</label><select>
+          <option>UI / UX Design</option><option>Frontend Development</option><option>Full-Stack Web App</option>
+          <option>AI-Powered Web</option><option>Web for Uttarakhand</option><option>Open Innovation</option></select></div>
+        <button type="submit" class="btn btn-p" style="width:100%;margin-top:8px">Submit Registration</button>
+        <p class="msg" id="ok">✅ Registration received! A confirmation mail will reach your inbox shortly.</p>
+      </form>
+      <div>
+        <h3 style="font-family:'Syne';font-size:1.3rem;margin-bottom:6px">Rules &amp; Guidelines</h3>
+        <ul class="rules">
+          <li>Teams of 2 to 4 members; cross-branch teams are allowed.</li>
+          <li>All code must be written during the event. Boilerplate and open-source libraries are permitted with credit.</li>
+          <li>Bring your own laptops, chargers and extension boards. Wi-Fi and power are provided.</li>
+          <li>Projects must be pushed to a public GitHub repository before code freeze.</li>
+          <li>Any form of plagiarism leads to immediate disqualification.</li>
+          <li>Judges' decision on scoring and results is final.</li>
+          <li>Participants must carry a valid college ID card at all times.</li>
+        </ul>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- ====== FAQ ====== -->
+  <section id="faq"><div class="wrap rev" style="max-width:860px">
+    <div class="head"><p class="tag">/ FAQ</p><h2>Questions? <span class="grad">Answered.</span></h2></div>
+    <div class="faq"><button>Do I need prior web development experience? <i>+</i></button><div class="ans">Not at all. WEB-A-THON 4.0 has a dedicated beginner-friendly evaluation lens, and mentors are available in every lab through the night to unblock you.</div></div>
+    <div class="faq"><button>Is there a registration fee? <i>+</i></button><div class="ans">Participation is free for GEHU Haldwani students. Students from other institutions may be charged a nominal fee — check with the coordinators.</div></div>
+    <div class="faq"><button>Can I use frameworks and UI libraries? <i>+</i></button><div class="ans">Yes. React, Vue, Tailwind, Bootstrap, GSAP and similar tools are all allowed as long as the project logic is built during the event.</div></div>
+    <div class="faq"><button>Will food and stay be provided? <i>+</i></button><div class="ans">Refreshments, dinner and midnight snacks are arranged on campus. Overnight seating is inside the labs; outstation participants should inform coordinators in advance.</div></div>
+    <div class="faq"><button>How will projects be judged? <i>+</i></button><div class="ans">On innovation and problem fit, UI/UX quality, technical implementation, responsiveness, code cleanliness and the final pitch.</div></div>
+  </div></section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer><div class="wrap">
+    <div class="fgrid">
+      <div>
+        <a href="#" class="logo" style="margin-bottom:14px">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 50'%3E%3Crect width='220' height='50' fill='%2305060f' rx='8'/%3E%3Ctext x='12' y='22' font-family='Syne, sans-serif' font-weight='800' font-size='15' fill='%2300e5ff'%3EGRAPHIC ERA%3C/text%3E%3Ctext x='12' y='38' font-family='Syne, sans-serif' font-weight='700' font-size='11' fill='%23ffffff'%3EHILL UNIV · HALDWANI%3C/text%3E%3Ctext x='120' y='22' font-family='Syne, sans-serif' font-weight='800' font-size='17' fill='%237c4dff'%3ETECH%3C/text%3E%3Ctext x='120' y='38' font-family='Syne, sans-serif' font-weight='700' font-size='13' fill='%23ff2d95'%3EGEEKS%3C/text%3E%3C/svg%3E" 
+               alt="GEHU Tech Geeks" style="height:40px;" />
+          <span class="logo-text">NIRVAN '26<small>WEB-A-THON 4.0</small></span>
+        </a>
+        <p>Organised by the <b style="color:#fff">Tech Geeks Club</b>, School of Engineering &amp; Computer Applications, Graphic Era Hill University — Haldwani Campus.</p>
+      </div>
+      <div><h5>Quick Links</h5><div class="fl">
+        <a href="#about">About</a><a href="#tracks">Tracks</a><a href="#schedule">Schedule</a><a href="#register">Register</a><a href="#faq">FAQ</a></div></div>
+      <div><h5>Reach Us</h5><div class="fl">
+        <a href="mailto:haldwanicampus@gehu.ac.in">haldwanicampus@gehu.ac.in</a>
+        <a href="https://techgeeks.gehu.in" target="_blank" rel="noopener">techgeeks.gehu.in</a>
+        <a href="https://www.instagram.com/techgeeksgehu" target="_blank" rel="noopener">@techgeeksgehu</a>
+        <a href="https://gehu.ac.in/haldwani/" target="_blank" rel="noopener">gehu.ac.in/haldwani</a>
+        <p>Tularampur, Bareilly Road,<br>Haldwani – 263139, Uttarakhand</p></div></div>
+    </div>
+    <div class="copy">© 2026 NIRVAN '26 · WEB-A-THON 4.0 — Tech Geeks Club, GEHU Haldwani. Built with ♥ and vanilla JS.</div>
+  </div></footer>
+
+  <!-- ====== JAVASCRIPT (separate) ====== -->
+  <script>
+    /* nav */
+    const hd = document.getElementById('hd'), nv = document.getElementById('nv');
+    addEventListener('scroll', () => hd.classList.toggle('on', scrollY > 60));
+    document.getElementById('bg').onclick = () => nv.classList.toggle('show');
+    nv.onclick = e => { if (e.target.tagName === 'A') nv.classList.remove('show'); };
+
+    /* countdown — change this date to your actual event date */
+    const target = new Date('2026-03-14T09:00:00+05:30').getTime();
+    setInterval(() => {
+      let t = target - Date.now(); if (t < 0) t = 0;
+      const p = n => String(n).padStart(2, '0');
+      document.getElementById('d').textContent = p(Math.floor(t / 864e5));
+      document.getElementById('h').textContent = p(Math.floor(t / 36e5) % 24);
+      document.getElementById('m').textContent = p(Math.floor(t / 6e4) % 60);
+      document.getElementById('s').textContent = p(Math.floor(t / 1e3) % 60);
+    }, 1000);
+
+    /* reveal on scroll */
+    const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('in')), { threshold: .12 });
+    document.querySelectorAll('.rev').forEach(el => io.observe(el));
+
+    /* faq */
+    document.querySelectorAll('.faq button').forEach(b => b.onclick = () => {
+      const f = b.parentElement, open = f.classList.contains('open');
+      document.querySelectorAll('.faq').forEach(x => x.classList.remove('open'));
+      if (!open) f.classList.add('open');
+    });
+
+    /* form */
+    document.getElementById('rf').onsubmit = e => {
+      e.preventDefault();
+      document.getElementById('ok').style.display = 'block';
+      e.target.reset();
+    };
+
+    /* starfield */
+    const cv = document.getElementById('stars'), cx = cv.getContext('2d');
+    let st = [];
+    function size() {
+      cv.width = innerWidth; cv.height = innerHeight;
+      st = Array.from({ length: Math.min(150, Math.floor(innerWidth / 9)) }, () => ({
+        x: Math.random() * cv.width, y: Math.random() * cv.height, r: Math.random() * 1.5 + .3,
+        v: Math.random() * .3 + .06, o: Math.random() * .7 + .2
+      }));
+    }
+    size(); addEventListener('resize', size);
+    (function loop() {
+      cx.clearRect(0, 0, cv.width, cv.height);
+      st.forEach(p => { p.y -= p.v; if (p.y < 0) { p.y = cv.height; p.x = Math.random() * cv.width; }
+        cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 7); cx.fillStyle = `rgba(180,210,255,${p.o})`; cx.fill(); });
+      requestAnimationFrame(loop);
+    })();
+  </script>
+</body>
+</html>
